@@ -199,10 +199,10 @@ export default function BookingPage() {
               </div>
             </div>
 
-            {/* Nomor Identitas */}
+            {/* Nomor hp */}
             <div>
               <label className="block text-sm font-medium mb-2">
-                Nomor Identitas (KTP/SIM) <span className="text-red-400">*</span>
+                Nomor Handphone (16 digit) <span className="text-red-400">*</span>
               </label>
               <input
                 type="text"
@@ -257,6 +257,7 @@ export default function BookingPage() {
                   name="tanggalPesan"
                   value={formData.tanggalPesan}
                   onChange={handleInputChange}
+                  min={new Date().toISOString().split('T')[0]}
                   className="w-full px-4 py-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white"
                 />
                 {errors.tanggalPesan && <p className="text-red-400 text-sm mt-1">{errors.tanggalPesan}</p>}

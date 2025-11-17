@@ -9,9 +9,10 @@
     "lint": "eslint"
   },
   "dependencies": {
-    "@prisma/client": "^6.17.0",
+    "@prisma/client": "^6.19.0",
     "@prisma/extension-accelerate": "^2.0.2",
     "better-auth": "^1.3.27",
+    "flatpickr": "^4.6.13",
     "lucide-react": "^0.545.0",
     "next": "15.5.4",
     "react": "19.1.0",
@@ -25,8 +26,9 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.5.4",
-    "prisma": "^6.17.0",
+    "prisma": "^6.19.0",
     "tailwindcss": "^4",
+    "tsx": "^4.20.6",
     "typescript": "^5"
   }
 }

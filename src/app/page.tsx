@@ -1,13 +1,22 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { Hotel, MapPin, Phone, Mail, Menu, X, Bed, Coffee, Wifi, Car, Star, Users, Shield } from "lucide-react";
+import { Hotel, MapPin, Phone, Mail, Menu, X, Coffee, Wifi, Car, Star, Users, Shield } from "lucide-react";
 
 export default function HotelBookingPage() {
   const router = useRouter();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   const roomTypes = [
     { 
@@ -53,13 +62,22 @@ export default function HotelBookingPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-slate-900 to-gray-900 text-white">
+      <style jsx>{`
+        .card-hover {
+          transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+          transform: translateY(-4px);
+        }
+      `}</style>
+
       {/* Navigation */}
-      <nav className="fixed top-0 w-full z-50 bg-black/80 backdrop-blur-lg border-b border-white/10">
+      <nav className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? 'bg-gray-950/95 backdrop-blur-lg shadow-lg' : 'bg-black/70 backdrop-blur-md'} border-b border-gray-700`}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <div className="flex items-center space-x-2">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
                 <Hotel className="w-6 h-6" />
               </div>
               <span className="text-2xl font-bold">Grand Hotel</span>
@@ -72,7 +90,7 @@ export default function HotelBookingPage() {
               <a href="#about" className="text-gray-300 hover:text-white transition-colors">Tentang Kami</a>
               <button 
                 onClick={handleBooking}
-                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 font-medium shadow-lg shadow-blue-500/30"
+                className="px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg shadow-blue-600/30"
               >
                 Pesan Kamar
               </button>
@@ -88,15 +106,15 @@ export default function HotelBookingPage() {
         </div>
 
         {mobileMenuOpen && (
-          <div className="md:hidden bg-black/95 backdrop-blur-lg border-t border-white/10">
+          <div className="md:hidden bg-gray-950/98 backdrop-blur-lg border-t border-gray-700">
             <div className="px-4 py-6 space-y-4">
-              <a href="#home" className="block text-gray-300 hover:text-white transition-colors">Beranda</a>
-              <a href="#products" className="block text-gray-300 hover:text-white transition-colors">Produk</a>
-              <a href="#prices" className="block text-gray-300 hover:text-white transition-colors">Daftar Harga</a>
-              <a href="#about" className="block text-gray-300 hover:text-white transition-colors">Tentang Kami</a>
+              <a href="#home" className="block text-gray-300 hover:text-white transition-colors py-2">Beranda</a>
+              <a href="#products" className="block text-gray-300 hover:text-white transition-colors py-2">Produk</a>
+              <a href="#prices" className="block text-gray-300 hover:text-white transition-colors py-2">Daftar Harga</a>
+              <a href="#about" className="block text-gray-300 hover:text-white transition-colors py-2">Tentang Kami</a>
               <button 
                 onClick={() => { handleBooking(); setMobileMenuOpen(false); }}
-                className="w-full px-6 py-2 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg"
+                className="w-full px-6 py-2 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 shadow-lg shadow-blue-600/30"
               >
                 Pesan Kamar
               </button>
@@ -105,31 +123,31 @@ export default function HotelBookingPage() {
         )}
       </nav>
 
-      {/* Hero Section with Hotel Image */}
+      {/* Hero Section */}
       <div id="home" className="relative pt-32 pb-20 px-4 sm:px-6 lg:px-8 overflow-hidden">
         <div className="absolute inset-0 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-b from-black/50 to-black/70 z-10"></div>
-          <img 
+          <div className="absolute inset-0 bg-gradient-to-b from-black/60 via-gray-900/70 to-gray-900 z-10"></div>
+          <Image 
             src="/images/hotel.jpg" 
             alt="Grand Hotel" 
-            className="absolute inset-0 w-full h-full object-cover opacity-40"
+            fill
+            className="object-cover opacity-50"
+            priority
           />
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-blue-500/20 rounded-full blur-3xl animate-pulse"></div>
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl animate-pulse"></div>
         </div>
 
         <div className="relative z-20 max-w-7xl mx-auto text-center">
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-blue-200 to-purple-200 bg-clip-text text-transparent">
+          <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
             Selamat Datang di Grand Hotel
           </h1>
           
-          <p className="text-xl md:text-2xl text-gray-300 mb-10 max-w-3xl mx-auto">
+          <p className="text-lg md:text-xl text-gray-200 mb-10 max-w-2xl mx-auto">
             Pengalaman menginap terbaik dengan pelayanan berkelas dan fasilitas lengkap di jantung kota
           </p>
 
           <button 
             onClick={handleBooking}
-            className="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 text-lg font-semibold shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 hover:scale-105"
+            className="px-8 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 text-base font-medium hover:scale-105 shadow-lg shadow-blue-600/30"
           >
             Pesan Sekarang
           </button>
@@ -137,16 +155,16 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Features Section */}
-      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-black/20">
+      <div className="py-16 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {features.map((feature, index) => (
-              <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 text-center">
-                <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-500 to-purple-600 rounded-full mb-4">
+              <div key={index} className="bg-gray-800 rounded-lg p-6 border border-gray-700 hover:border-blue-600 transition-all duration-300 card-hover">
+                <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full mb-4">
                   {feature.icon}
                 </div>
-                <h3 className="text-xl font-bold mb-2">{feature.title}</h3>
-                <p className="text-gray-400">{feature.description}</p>
+                <h3 className="text-xl font-semibold mb-2">{feature.title}</h3>
+                <p className="text-gray-300">{feature.description}</p>
               </div>
             ))}
           </div>
@@ -154,28 +172,28 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Receptionist Section */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8">
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
-            <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-              <img 
+            <div className="relative rounded-lg overflow-hidden h-[500px] group">
+              <Image 
                 src="/images/receptionist.jpg" 
                 alt="Receptionist" 
-                className="w-full h-[500px] object-cover"
+                fill
+                className="object-cover transition-transform duration-500 group-hover:scale-105"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
             </div>
             <div>
-              <h2 className="text-4xl font-bold mb-6">Pelayanan Terbaik untuk Anda</h2>
-              <p className="text-gray-300 mb-4 leading-relaxed">
+              <h2 className="text-3xl font-bold mb-6">Pelayanan Terbaik untuk Anda</h2>
+              <p className="text-gray-300 mb-4">
                 Tim resepsionis kami yang ramah dan profesional siap membantu Anda 24/7. Kami berkomitmen memberikan pengalaman check-in yang cepat dan mudah.
               </p>
-              <p className="text-gray-300 mb-6 leading-relaxed">
+              <p className="text-gray-300 mb-6">
                 Dari reservasi hingga check-out, kami memastikan setiap momen Anda di Grand Hotel menjadi pengalaman yang tak terlupakan.
               </p>
               <button 
                 onClick={handleBooking}
-                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 font-medium"
+                className="px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg shadow-blue-600/30"
               >
                 Hubungi Kami
               </button>
@@ -185,45 +203,45 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Products Section */}
-      <div id="products" className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30">
+      <div id="products" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="max-w-7xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-4">Tipe Kamar Kami</h2>
+          <h2 className="text-3xl font-bold text-center mb-3">Tipe Kamar Kami</h2>
           <p className="text-gray-400 text-center mb-12">Pilih kamar sesuai kebutuhan Anda</p>
           
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             {roomTypes.map((room, index) => (
-              <div key={index} className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 hover:border-blue-500 transition-all duration-300 hover:transform hover:scale-105 group">
+              <div key={index} className="bg-gray-800 rounded-lg overflow-hidden border border-gray-700 hover:border-blue-600 transition-all duration-300 card-hover">
                 <div className="relative h-64 overflow-hidden">
-                  <img 
+                  <Image 
                     src={room.image} 
                     alt={room.type}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-gray-900 to-transparent opacity-60"></div>
-                  <div className="absolute bottom-4 left-4 right-4">
-                    <h3 className="text-2xl font-bold text-white">{room.type}</h3>
+                  <div className="absolute bottom-0 left-0 right-0 bg-black/70 p-4 z-10">
+                    <h3 className="text-xl font-bold text-white">{room.type}</h3>
                   </div>
                 </div>
                 <div className="p-6">
-                  <p className="text-3xl font-bold text-blue-400 mb-4">
+                  <p className="text-2xl font-bold text-blue-400 mb-3">
                     Rp {room.price.toLocaleString('id-ID')}
-                    <span className="text-sm text-gray-400">/malam</span>
+                    <span className="text-sm text-gray-400 font-normal">/malam</span>
                   </p>
-                  <p className="text-gray-400 mb-6">{room.description}</p>
+                  <p className="text-gray-300 mb-6 text-sm">{room.description}</p>
                   <div className="flex flex-wrap gap-2 mb-6">
-                    <span className="px-3 py-1 bg-gray-700 rounded-full text-sm flex items-center gap-1">
+                    <span className="px-3 py-1 bg-gray-700 rounded text-sm flex items-center gap-1">
                       <Wifi className="w-4 h-4" /> WiFi
                     </span>
-                    <span className="px-3 py-1 bg-gray-700 rounded-full text-sm flex items-center gap-1">
+                    <span className="px-3 py-1 bg-gray-700 rounded text-sm flex items-center gap-1">
                       <Coffee className="w-4 h-4" /> Breakfast
                     </span>
-                    <span className="px-3 py-1 bg-gray-700 rounded-full text-sm flex items-center gap-1">
+                    <span className="px-3 py-1 bg-gray-700 rounded text-sm flex items-center gap-1">
                       <Car className="w-4 h-4" /> Parking
                     </span>
                   </div>
                   <button 
                     onClick={handleBooking}
-                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 font-medium"
+                    className="w-full px-6 py-3 bg-gradient-to-r from-blue-600 to-blue-500 rounded-lg hover:from-blue-700 hover:to-blue-600 transition-all duration-300 font-medium shadow-lg shadow-blue-600/30"
                   >
                     Pesan Sekarang
                   </button>
@@ -234,20 +252,39 @@ export default function HotelBookingPage() {
         </div>
       </div>
 
+      {/* Video Section */}
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800">
+        <div className="max-w-6xl mx-auto">
+          <h2 className="text-3xl font-bold text-center mb-3">Hotel Kami</h2>
+          <p className="text-gray-400 text-center mb-12">Lihat suasana dan fasilitas Grand Hotel</p>
+          
+          <div className="relative bg-black rounded-lg overflow-hidden shadow-xl" style={{ paddingBottom: '56.25%' }}>
+            <iframe
+              className="absolute top-0 left-0 w-full h-full"
+              src="https://www.youtube.com/embed/pxEV1A5mTYM"
+              title="Video Grand Hotel"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        </div>
+      </div>
+
       {/* Reception Area Image */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8">
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="max-w-7xl mx-auto">
-          <div className="relative rounded-2xl overflow-hidden shadow-2xl">
-            <img 
-              src="/images/receptionist.jpg" 
-              alt="Reception Area" 
-              className="w-full h-[400px] object-cover"
+          <div className="relative rounded-lg overflow-hidden h-[400px] group">
+            <Image 
+              src="/images/resto.jpg" 
+              alt="Restaurant Area" 
+              fill
+              className="object-cover transition-transform duration-500 group-hover:scale-105"
             />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/70 to-transparent flex items-center">
+            <div className="absolute inset-0 bg-black/60 flex items-center z-10">
               <div className="px-8 md:px-16 max-w-2xl">
-                <h2 className="text-4xl md:text-5xl font-bold mb-4">Area Resepsi Modern</h2>
-                <p className="text-lg text-gray-200">
-                  Nikmati suasana lobby yang elegan dan nyaman saat tiba di hotel kami
+                <h2 className="text-3xl md:text-4xl font-bold mb-4">Area Restaurant Modern</h2>
+                <p className="text-base text-gray-200">
+                  Nikmati berbagai hidangan lezat di restaurant kami yang mengusung konsep modern dengan suasana nyaman dan elegan. Cocok untuk santapan bersama keluarga atau pertemuan bisnis.
                 </p>
               </div>
             </div>
@@ -256,44 +293,44 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Price Table Section */}
-      <div id="prices" className="py-20 px-4 sm:px-6 lg:px-8 bg-black/30">
+      <div id="prices" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">Daftar Harga</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Daftar Harga</h2>
           
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-700 shadow-xl">
+          <div className="bg-gray-900 rounded-lg overflow-hidden border border-gray-700 shadow-lg">
             <table className="w-full">
-              <thead className="bg-gradient-to-r from-blue-600 to-purple-600">
+              <thead className="bg-blue-600">
                 <tr>
-                  <th className="px-6 py-4 text-left text-lg">Tipe Kamar</th>
-                  <th className="px-6 py-4 text-right text-lg">Harga per Malam</th>
+                  <th className="px-6 py-4 text-left text-base font-semibold">Tipe Kamar</th>
+                  <th className="px-6 py-4 text-right text-base font-semibold">Harga per Malam</th>
                 </tr>
               </thead>
               <tbody>
-                <tr className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
-                  <td className="px-6 py-4 font-semibold">STANDAR</td>
-                  <td className="px-6 py-4 text-right text-blue-400 font-semibold">Rp 500.000</td>
+                <tr className="border-b border-gray-700 hover:bg-gray-800 transition-colors">
+                  <td className="px-6 py-4 font-medium">STANDAR</td>
+                  <td className="px-6 py-4 text-right text-blue-400 font-medium">Rp 500.000</td>
                 </tr>
-                <tr className="border-b border-gray-700 hover:bg-gray-700/50 transition-colors">
-                  <td className="px-6 py-4 font-semibold">DELUXE</td>
-                  <td className="px-6 py-4 text-right text-blue-400 font-semibold">Rp 750.000</td>
+                <tr className="border-b border-gray-700 hover:bg-gray-800 transition-colors">
+                  <td className="px-6 py-4 font-medium">DELUXE</td>
+                  <td className="px-6 py-4 text-right text-blue-400 font-medium">Rp 750.000</td>
                 </tr>
-                <tr className="hover:bg-gray-700/50 transition-colors">
-                  <td className="px-6 py-4 font-semibold">FAMILY</td>
-                  <td className="px-6 py-4 text-right text-blue-400 font-semibold">Rp 1.000.000</td>
+                <tr className="hover:bg-gray-800 transition-colors">
+                  <td className="px-6 py-4 font-medium">FAMILY</td>
+                  <td className="px-6 py-4 text-right text-blue-400 font-medium">Rp 1.000.000</td>
                 </tr>
               </tbody>
             </table>
           </div>
 
-          <div className="mt-6 bg-blue-900/30 border border-blue-500/50 rounded-lg p-6">
+          <div className="mt-6 bg-blue-900/30 border border-blue-600/40 rounded-lg p-6">
             <div className="flex items-start gap-3">
               <Star className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
               <div>
-                <p className="text-blue-200 mb-2">
-                  <strong className="text-blue-100">Promo Spesial:</strong> Diskon 10% untuk menginap lebih dari 3 hari!
+                <p className="text-gray-200 mb-2">
+                  <strong className="text-white">Promo Spesial:</strong> Diskon 10% untuk menginap lebih dari 3 hari!
                 </p>
-                <p className="text-blue-200">
-                  <strong className="text-blue-100">Paket Breakfast:</strong> Tambahan Rp 80.000/hari untuk sarapan buffet lengkap
+                <p className="text-gray-200">
+                  <strong className="text-white">Paket Breakfast:</strong> Tambahan Rp 80.000/hari untuk sarapan buffet lengkap
                 </p>
               </div>
             </div>
@@ -302,12 +339,12 @@ export default function HotelBookingPage() {
       </div>
 
       {/* About Section */}
-      <div id="about" className="py-20 px-4 sm:px-6 lg:px-8">
+      <div id="about" className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-900">
         <div className="max-w-4xl mx-auto">
-          <h2 className="text-4xl font-bold text-center mb-12">Tentang Kami</h2>
+          <h2 className="text-3xl font-bold text-center mb-12">Tentang Kami</h2>
           
-          <div className="bg-gray-800/50 backdrop-blur-sm rounded-xl p-8 border border-gray-700 shadow-xl">
-            <p className="text-gray-300 mb-6 leading-relaxed text-lg">
+          <div className="bg-gray-800 rounded-lg p-8 border border-gray-700">
+            <p className="text-gray-300 mb-6 leading-relaxed">
               Grand Hotel adalah hotel bintang lima yang berlokasi di jantung kota, menawarkan pengalaman menginap yang tak terlupakan dengan pelayanan kelas dunia. Kami berkomitmen untuk memberikan kenyamanan maksimal bagi setiap tamu kami.
             </p>
             
@@ -316,7 +353,7 @@ export default function HotelBookingPage() {
             </p>
             
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-8">
-              <div className="flex items-start gap-3 bg-gray-900/50 p-4 rounded-lg">
+              <div className="flex items-start gap-3 bg-gray-900 p-4 rounded-lg hover:bg-gray-700 transition-colors">
                 <MapPin className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h4 className="font-semibold mb-1">Alamat</h4>
@@ -324,7 +361,7 @@ export default function HotelBookingPage() {
                 </div>
               </div>
               
-              <div className="flex items-start gap-3 bg-gray-900/50 p-4 rounded-lg">
+              <div className="flex items-start gap-3 bg-gray-900 p-4 rounded-lg hover:bg-gray-700 transition-colors">
                 <Phone className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h4 className="font-semibold mb-1">No. Telepon</h4>
@@ -332,7 +369,7 @@ export default function HotelBookingPage() {
                 </div>
               </div>
               
-              <div className="flex items-start gap-3 bg-gray-900/50 p-4 rounded-lg">
+              <div className="flex items-start gap-3 bg-gray-900 p-4 rounded-lg hover:bg-gray-700 transition-colors">
                 <Mail className="w-6 h-6 text-blue-400 flex-shrink-0 mt-1" />
                 <div>
                   <h4 className="font-semibold mb-1">Email</h4>
@@ -345,15 +382,15 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Call to Action */}
-      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gradient-to-r from-blue-900/30 to-purple-900/30">
+      <div className="py-20 px-4 sm:px-6 lg:px-8 bg-gray-800">
         <div className="max-w-4xl mx-auto text-center">
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">Siap untuk Pengalaman Terbaik?</h2>
-          <p className="text-xl text-gray-300 mb-8">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">Siap untuk Pengalaman Terbaik?</h2>
+          <p className="text-lg text-gray-300 mb-8">
             Pesan kamar Anda sekarang dan nikmati pelayanan berkelas di Grand Hotel
           </p>
           <button 
             onClick={handleBooking}
-            className="px-10 py-4 bg-gradient-to-r from-blue-600 to-purple-600 rounded-lg hover:from-blue-500 hover:to-purple-500 transition-all duration-300 text-lg font-semibold shadow-lg shadow-blue-500/50 hover:shadow-blue-500/70 hover:scale-105"
+            className="px-10 py-4 bg-blue-600 rounded-lg hover:bg-blue-700 transition-all duration-300 text-base font-medium hover:scale-105"
           >
             Pesan Kamar Sekarang
           </button>
@@ -361,14 +398,11 @@ export default function HotelBookingPage() {
       </div>
 
       {/* Footer */}
-      <footer className="bg-black/50 border-t border-gray-800 py-8 px-4">
+      <footer className="bg-black/50 border-t border-gray-700 py-8 px-4">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
             <div>
               <div className="flex items-center space-x-2 mb-4">
-                <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <Hotel className="w-6 h-6" />
-                </div>
                 <span className="text-xl font-bold">Grand Hotel</span>
               </div>
               <p className="text-gray-400 text-sm">
@@ -405,7 +439,7 @@ export default function HotelBookingPage() {
             </div>
           </div>
           
-          <div className="border-t border-gray-800 pt-6 text-center text-gray-400 text-sm">
+          <div className="border-t border-gray-700 pt-6 text-center text-gray-400 text-sm">
             <p>&copy; 2025 Grand Hotel. All rights reserved.</p>
           </div>
         </div>
